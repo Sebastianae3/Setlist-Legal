@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Setlist · Copyright notice (DMCA)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#0E0D0C; --surface:#1A1917; --outline:#2E2C29; --bone:#F5F3EE; --orange:#FF5A1F; --amber:#FFB020; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--ink); color:var(--bone); font:16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  main { max-width:680px; margin:0 auto; padding:48px 20px 80px; }
+  h1 { font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:56px; line-height:.95; margin:0 0 16px; }
+  h2 { font-family:Anton, Impact, sans-serif; font-weight:400; text-transform:uppercase; font-size:24px; margin:36px 0 8px; }
+  .eyebrow { font:600 12px/1 ui-monospace, Menlo, monospace; letter-spacing:.12em; color:rgba(245,243,238,.6); text-transform:uppercase; margin-bottom:14px; }
+  p, li { color:rgba(245,243,238,.78); }
+  a { color:var(--amber); }
+  .card { background:var(--surface); border:1px solid var(--outline); border-radius:22px; padding:22px; margin-top:16px; }
+  label { display:block; font-weight:600; margin:16px 0 6px; }
+  .hint { font-weight:400; color:rgba(245,243,238,.55); font-size:14px; }
+  input, textarea { width:100%; background:var(--ink); color:var(--bone); border:1px solid var(--outline); border-radius:16px; padding:14px 16px; font:inherit; }
+  textarea { min-height:110px; resize:vertical; }
+  input:focus, textarea:focus { outline:2px solid var(--orange); border-color:transparent; }
+  .check { display:flex; gap:12px; align-items:flex-start; margin-top:16px; font-weight:400; }
+  .check input { width:22px; height:22px; flex:none; margin-top:2px; accent-color:var(--orange); }
+  button { margin-top:28px; width:100%; min-height:60px; border:0; border-radius:999px; font:600 19px/1 -apple-system, sans-serif;
+           color:var(--ink); background:linear-gradient(90deg, var(--orange), var(--amber)); cursor:pointer; }
+  button:disabled { opacity:.5; }
+  .result { margin-top:18px; padding:16px; border-radius:16px; display:none; }
+  .ok { background:rgba(52,199,89,.15); color:#7BE495; display:block; }
+  .err { background:rgba(255,90,31,.15); color:var(--orange); display:block; }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Setlist · Legal</div>
+  <h1>Copyright notice</h1>
+  <p>If you own the rights to a work and believe a performance video on Setlist infringes them, submit a notice under the Digital Millennium Copyright Act (17 U.S.C. § 512). The video is hidden as soon as we can identify it, and the musician is told and can respond.</p>
+  <p>You can also send a notice by email to our designated agent: <a id="email-link" href="#"></a>.</p>
+  <p class="hint">Knowingly misrepresenting that material is infringing can make you liable for damages (17 U.S.C. § 512(f)). If you're unsure, consider talking to a lawyer first.</p>
+
+  <form id="form" class="card" novalidate>
+    <h2>About you</h2>
+    <label for="name">Full legal name</label>
+    <input id="name" required autocomplete="name">
+    <label for="company">Company you represent <span class="hint">(optional)</span></label>
+    <input id="company" autocomplete="organization">
+    <label for="email">Email</label>
+    <input id="email" type="email" required autocomplete="email">
+    <label for="phone">Phone <span class="hint">(optional)</span></label>
+    <input id="phone" type="tel" autocomplete="tel">
+    <label for="address">Mailing address</label>
+    <textarea id="address" required autocomplete="street-address"></textarea>
+
+    <h2>The work and the video</h2>
+    <label for="work">The copyrighted work <span class="hint">(song title, writer or owner, and a link if available)</span></label>
+    <textarea id="work" required></textarea>
+    <label for="material">The Setlist video <span class="hint">(the musician's name and city on Setlist, and what happens in the video)</span></label>
+    <textarea id="material" required></textarea>
+    <label for="video">Video ID <span class="hint">(optional: shown under "Report video" in the app)</span></label>
+    <input id="video" placeholder="e.g. 3f2b6c1e-…">
+
+    <h2>Statements</h2>
+    <label class="check"><input type="checkbox" id="faith" required>
+      <span>I have a good-faith belief that use of the material in the manner complained of is not authorized by the copyright owner, its agent, or the law.</span></label>
+    <label class="check"><input type="checkbox" id="accuracy" required>
+      <span>The information in this notice is accurate, and under penalty of perjury, I am the owner, or authorized to act on behalf of the owner, of an exclusive right that is allegedly infringed.</span></label>
+    <label for="signature">Electronic signature <span class="hint">(type your full legal name)</span></label>
+    <input id="signature" required>
+
+    <button id="submit" type="submit">Submit notice</button>
+    <div id="result" class="result" role="status"></div>
+  </form>
+
+  <h2>Counter-notices</h2>
+  <p>Musicians whose video was removed can file a counter-notice from the Setlist app (Profile → Video). Under the law, the video is restored after 10 business days unless the person who sent the notice tells us they've filed a lawsuit.</p>
+  <h2>Repeat infringers</h2>
+  <p>Accounts with 3 valid takedowns can no longer post videos.</p>
+</main>
+<script>
+  // The publishable key is public by design: it can only call functions that are open to everyone
+  // (here, submitting a notice). Everything else is protected by the database's security rules.
+  const SUPABASE_URL = "https://qqjdvnpvbnfksxtglilh.supabase.co";
+  const PUBLISHABLE_KEY = "sb_publishable_W0lP5eZ_HjQqlY5QTyTC3g_9kIcyoM2";
+  const COPYRIGHT_EMAIL = "Sebastian.agrelo@icloud.com";
+
+  const link = document.getElementById("email-link");
+  link.textContent = COPYRIGHT_EMAIL;
+  link.href = "mailto:" + COPYRIGHT_EMAIL + "?subject=DMCA%20notice";
+  const params = new URLSearchParams(location.search);
+  if (params.get("video")) document.getElementById("video").value = params.get("video");
+
+  const $ = (id) => document.getElementById(id);
+  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  $("form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const result = $("result");
+    result.className = "result";
+    if (!$("form").checkValidity()) {
+      result.textContent = "Please fill in every required field and tick both statements.";
+      result.className = "result err";
+      return;
+    }
+    const video = $("video").value.trim();
+    $("submit").disabled = true;
+    try {
+      const response = await fetch(SUPABASE_URL + "/rest/v1/rpc/submit_copyright_notice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: PUBLISHABLE_KEY, Authorization: "Bearer " + PUBLISHABLE_KEY },
+        body: JSON.stringify({
+          p_claimant_name: $("name").value, p_claimant_company: $("company").value, p_claimant_email: $("email").value,
+          p_claimant_phone: $("phone").value, p_claimant_address: $("address").value, p_copyrighted_work: $("work").value,
+          p_infringing_material: $("material").value, p_good_faith: $("faith").checked, p_accuracy: $("accuracy").checked,
+          p_signature: $("signature").value, p_video: uuid.test(video) ? video : null,
+        }),
+      });
+      const body = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message = String(body && body.message || "");
+        throw new Error(message.includes("rate_limited") ? "Too many notices were sent recently. Please try again later or email us."
+          : message.includes("incomplete") ? "Please fill in every required field and tick both statements."
+          : "We couldn't submit your notice. Please email " + COPYRIGHT_EMAIL + ".");
+      }
+      $("form").reset();
+      result.textContent = body === "actioned"
+        ? "Thank you. Your notice was received and the video has been hidden. The musician has been notified."
+        : "Thank you. Your notice was received. We'll identify the video and act on it promptly.";
+      result.className = "result ok";
+    } catch (error) {
+      result.textContent = error.message;
+      result.className = "result err";
+    } finally {
+      $("submit").disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
