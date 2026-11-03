@@ -39,6 +39,20 @@
   </div>
 </main>
 <script>
+  // Spanish when the phone or browser is set to Spanish.
+  if ((navigator.language || "").toLowerCase().startsWith("es")) {
+    document.documentElement.lang = "es";
+    document.title = "Setlist · Correo confirmado";
+    const set = (selector, text) => { const el = document.querySelector(selector); if (el) el.textContent = text; };
+    set("#ok h1", "¡Gracias por confirmar!");
+    set("#ok p", "Tu correo está verificado y tu cuenta de Setlist está lista. Vuelve a la app para encontrar gigs y músicos cerca de ti.");
+    set("#open", "Abrir Setlist");
+    set("#ok .small", "¿Estás en una computadora? Abre Setlist en tu teléfono e inicia sesión.");
+    set("#error h1", "Ese enlace no funcionó");
+    set("#error-text", "Puede haber vencido o ya se usó. Abre Setlist e inicia sesión. Si tu correo todavía no está confirmado, te enviaremos un enlace nuevo.");
+    set("#error .button", "Abrir Setlist");
+  }
+
   // Supabase sends people here after confirming. Success details arrive after the "#";
   // errors arrive as error / error_description (after "#" or "?").
   const params = new URLSearchParams(location.hash.slice(1) || location.search.slice(1));
